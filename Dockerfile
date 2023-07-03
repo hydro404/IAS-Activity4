@@ -1,23 +1,23 @@
-# Use an official Node.js runtime as the base image
+# Base Image
 FROM node:14
 
 # Install qpdf
 RUN apt-get update && apt-get install -y qpdf
 
-# Set the working directory in the container to /app
-WORKDIR /app
+# Create app directory
+WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json into the container at /app
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
 COPY package*.json ./
 
-# Install the application's dependencies inside the container
 RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
-# Copy the rest of the application into the container at /app
+# Bundle app source
 COPY . .
 
-# Make port 3000 available to the outside world
 EXPOSE 3000
-
-# Run the application when the container launches
-CMD ["node", "main.js"]
+CMD [ "node", "main.js" ]
